@@ -29,13 +29,16 @@
 ##
 
 set(CATALYST_HEADERS
+    catalyst/compiler.h
     catalyst/logging.h
     catalyst/memory.h
+    catalyst/window.h
     catalyst/utilities/pointer_math.h
 )                     
 
 set(CATALYST_SOURCES
     catalyst/memory/allocator.h
+    catalyst/internal/window.h
 
     catalyst/logging.c
     catalyst/memory.c
@@ -44,4 +47,23 @@ set(CATALYST_SOURCES
     catalyst/memory/stack_allocator.c
     catalyst/memory/pool_allocator.c
     catalyst/memory/free_list_allocator.c
-)                                                   
+    catalyst/window.c
+)
+
+if(WIN32)
+    list(APPEND CATALYST_SOURCES catalyst/window/win32_window.c)
+    set(
+        CATALYST_ADDITIONAL_LINK_LIBRARIES kernel32.lib
+        user32.lib
+        gdi32.lib
+        winspool.lib
+        comdlg32.lib
+        advapi32.lib
+        shell32.lib
+        ole32.lib
+        oleaut32.lib
+        uuid.lib
+        odbc32.lib
+        odbccp32.lib
+    )
+endif()

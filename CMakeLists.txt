@@ -59,6 +59,8 @@ else()
     set(CATALYST_STANDALONE_BUILD   FALSE)
 endif()
 
+set(CMAKE_C_STANDARD		    11)
+set(CMAKE_C_STANDARD_REQUIRED	YES)
 ##
 ##  Project output configuration
 ##
@@ -109,9 +111,12 @@ foreach(SOURCE IN LISTS CATALYST_SOURCES)
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE}>
         )
 endforeach()
+target_sources(catalyst PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/CMakeSources.txt)
+
 
 target_include_directories(catalyst PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(catalyst PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(catalyst PRIVATE ${CATALYST_ADDITIONAL_LINK_LIBRARIES})
 
 add_executable(catalyst-editor)
 add_executable(Catalyst::Editor ALIAS catalyst-editor)

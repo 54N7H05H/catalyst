@@ -1,35 +1,39 @@
 #include <catalyst/logging.h>
 #include <catalyst/memory.h>
+#include <catalyst/window.h>
 
 int main(int argc, char** argv) {
     catalyst_initialize_logging(); 
     catalyst_initialize_memory_subsystem();
+    catalyst_initialize_window_subsystem();
 
-    void* linear_memory = catalyst_allocate(sizeof (char) * 4096, alignof (char));
+    catalyst_window_t* window = catalyst_create_window(600, 400, 600, 400, "Catalyst エディター", CATALYST_WINDOW_ATTRIBUTE_DECORATED);
+    while(!catalyst_window_close_requested(window)) {
+        if(catalyst_window_get_key(window, CATALYST_KEY_Q)) {
+            CATALYST_INFO("Quit");
+            catalyst_window_close(window);   
+        }
+        
+        if(catalyst_window_get_key(window, CATALYST_KEY_M)) {
+            CATALYST_INFO("Maximizing window %p", window);
+            catalyst_window_maximize(window);
+        }
 
-    catalyst_allocator_t* linear_allocator = catalyst_create_allocator(
-                CATALYST_ALLOCATOR_TYPE_LINEAR,
-                linear_memory, sizeof(char) * 64, sizeof(char)
-            );
-    
-    if(linear_allocator)
-        CATALYST_TRACE("Linear allocator %p has been successfully created", linear_allocator);
-    CATALYST_INFO("Catalyst Editor has been successfully initialized");
+        if(catalyst_window_get_key(window, CATALYST_KEY_R)) {
+            CATALYST_INFO("Restoring window %p", window);
+            catalyst_window_restore(window);
+        }
 
-    for(size_t i = 0; i < 64 / sizeof(int); i++) {
-        int* leaking_allocation = catalyst_allocator_allocate(linear_allocator, sizeof(int), alignof(int));
-        if(leaking_allocation)
-            CATALYST_DEBUG("Leaking allocation %p is successful", leaking_allocation);
-        else
-            CATALYST_DEBUG("Leaking allocation was unsuccessful");
+        if(catalyst_window_get_mouse_button(window, CATALYST_MOUSE_BUTTON_RIGHT)) {
+            CATALYST_INFO("Flash Window %p", window);
+            catalyst_window_request_attention(window);
+        }
+
+        catalyst_poll_events(window);
     }
+    catalyst_delete_window(window);
 
-    if(linear_allocator) {
-        catalyst_deallocate(linear_memory);
-        catalyst_delete_allocator(linear_allocator);
-        CATALYST_TRACE("Linear allocator %p has been successfully deleted", linear_allocator);
-    }
-
+    catalyst_terminate_window_subsystem();
     catalyst_terminate_memory_subsystem();
     catalyst_terminate_logging(); 
     

@@ -1,3 +1,7 @@
 ====[ 27/10/2021 ]=============================================================================================================
++   Added Window system
++   Added Win32 backend for the window system
+*   Updated the catalyst-editor application
+====[ 27/10/2021 ]=============================================================================================================
 +   Added Logging system
 +   Added Memory Management system
