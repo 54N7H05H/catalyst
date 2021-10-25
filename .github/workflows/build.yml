@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [ development, main, ci ]
+
+  workflow_dispatch:
+
+jobs:
+  build-windows-win32-msvc:
+    name: Windows, Win32 Window Compositor, MSVC
+    runs-on: windows-latest
+    env:
+      CFLAGS: /WX
+
+    steps:
+      - name: Clone the github repository
+        uses: actions/checkout@v2
+
+      - name: "Update windows SDK"
+        uses: fbactions/setup-winsdk@v1
+        with:
+          winsdk-build-version: 19041
+
+      - name: Configure the CMake Project
+        run: |
+          mkdir build
+          cd build
+          dir
+          cmake -G "Visual Studio 16 2019" -DCMAKE_SYSTEM_VERSION=10.0.19041.0 -S D:\a\catalyst\catalyst
+
+      - name: Build the Catalyst static library
+        run: |
+          cd build
+          cmake --build . --target catalyst --parallel
+      
+      - name: Build the Catalyst Editor
+        run: |
+          cd build
+          cmake --build . --target catalyst-editor --parallel
