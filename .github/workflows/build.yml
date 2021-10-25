@@ -16,11 +16,16 @@ jobs:
       - name: Clone the github repository
         uses: actions/checkout@v2
 
+      - name: "Update windows SDK"
+        uses: fbactions/setup-winsdk@v1
+        with:
+          winsdk-build-version: 19041
+
       - name: Configure the CMake Project
         run: |
           mkdir build
           cd build
-          cmake -S ../ -G "Visual Studio 16 2019"
+          cmake -S ../ -G "Visual Studio 16 2019" -D-DCMAKE_SYSTEM_VERSION=10.0.19041.0
 
       - name: Build the Catalyst static library
         run: |
