@@ -11,6 +11,8 @@ jobs:
   build-windows-win32-msvc:
     name: Windows, Win32 Window Compositor, MSVC
     runs-on: windows-latest
+    env:
+      CFLAGS: /WX
 
     steps:
       - name: Clone the github repository
