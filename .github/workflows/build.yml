@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [ ci ]
+
+  workflow_dispatch:
+
+jobs:
+  build-windows-win32-msvc:
+    name: Windows, Win32 Window Compositor, MSVC
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the github repository
+        uses: actions/checkout@v2
+
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
