@@ -25,6 +25,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          dir
           cmake -S ../ -G "Visual Studio 16 2019" -D-DCMAKE_SYSTEM_VERSION=10.0.19041.0
 
       - name: Build the Catalyst static library
